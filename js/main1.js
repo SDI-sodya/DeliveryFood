@@ -10,12 +10,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginInput = document.querySelector('#login');
   const passwordInput = document.querySelector('#password');
 
-  const openModal = () =>
+  const openModal = () => {
     modalAuth.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    resetInputBorders();
+  }
   
-  const closeModal = () =>
+  const closeModal = () => {
     modalAuth.style.display = 'none';
+    document.body.style.overflow = '';
+  }
   
+  const resetInputBorders = () => {
+    loginInput.style.border = "";
+    passwordInput.style.border = "";
+  };
+
   // Button for logout
   const logout = () => {
     localStorage.removeItem('user');
@@ -28,12 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const login = () => {
     const loginValue = loginInput.value.trim();
     const passwordValue = passwordInput.value.trim();
-    if (!loginValue) {
+
+    let isValid = true;
+    if(!loginValue) {
       loginInput.style.border = "2px solid red";
-      return;
+      isValid = false;
     }
-    loginInput.style.border = "";
+    if(!passwordValue) {
+      passwordInput.style.border = "2px solid red";
+      isValid = false;
+    }
+    if(!isValid) return;
+    
     localStorage.setItem('user', JSON.stringify({ userName: loginValue, password: passwordValue }));
+    loginInput.value = "";
+    passwordInput.value = "";
     userName.style.display = 'flex';
     userName.textContent = loginValue;
     btnAuth.style.display = 'none';
@@ -43,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Check auth
   const checkAuth = () => {
-    const user = JSON.parse(localStorage.user).userName;
+    const { userName: storedUserName } = JSON.parse(user);
     if (user) {
       userName.style.display = 'flex';
-      userName.textContent = user;
+      userName.textContent = storedUserName;
       btnAuth.style.display = 'none';
       btnOut.style.display = 'flex';
     } else {
@@ -55,6 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   
+  window.addEventListener('click', (event) => {
+    if (event.target === modalAuth) {
+      closeModal();
+    }
+  });
+
   // Button to open the form
   btnAuth.addEventListener('click', openModal);
   // Button to close the form
@@ -66,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     login();
   });
-
 
   checkAuth();
 });
