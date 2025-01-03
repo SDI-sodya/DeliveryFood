@@ -8,6 +8,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap&subset=cyrillic" rel="stylesheet" />
 	<link rel="stylesheet" href="css/normalize.css" />
 	<link rel="stylesheet" href="css/style.css" />
+	<script src="./js/main.js" defer type="module"></script>
 </head>
 
 <body>
@@ -20,6 +21,21 @@
 				<input type="text" class="input input-address" placeholder="Адреса доставки" />
 			</label>
 			<div class="buttons">
+				<span class="user-name"></span>
+				<button class="button button-primary button-auth">
+					<span class="button-auth-svg"></span>
+					<span class="button-text">Війти</span>
+				</button>
+				<button class="button button-cart" id="cart-button">
+					<span class="button-cart-svg"></span>
+					<span class="button-text">Кошик</span>
+				</button>
+				<button class="button button-primary button-out">
+					<span class="button-text">Вийти</span>
+					<span class="button-out-svg"></span>
+				</button>
+			</div>
+			<!-- <div class="buttons">
 				<button class="button button-primary button-auth">
 					<span class="button-auth-svg"></span>
 					<span class="button-text">Війти</span>
@@ -27,7 +43,7 @@
 				<button class="button" id="cart-button">
 					<span class="button-cart-svg"></span>
 					<span class="button-text">Кошик</span>
-				</button>
+				</button> -->
 			</div>
 		</header>
 	</div>
