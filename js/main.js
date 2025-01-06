@@ -195,6 +195,14 @@ document.addEventListener("DOMContentLoaded", () => {
     cardsMenu.addEventListener('click', handleCardClick);
   }
 
+  var swiper = new Swiper(".swiper", {
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+    loop: true,
+  });
+
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     login();

@@ -176,19 +176,23 @@ button {
 }
 
 .pizza {
-    background: #fff1b8 url(../img/promo/pizza.png) no-repeat top -100px right -250px / 830px
+    background: #fff1b8 url(../img/promo/pizza.png) no-repeat top -100px right -250px / 830px;
+    height: 300px;
 }
 
 .kebab {
     background: #D6E4FF url(../img/promo/kebab.png) no-repeat top 45px right 40px / 450px;
+    height: 300px;
 }
 
 .vegetables {
-    background: #FFF566 url(../img/promo/vegetables.png) no-repeat top 0 right 0 / 825px
+    background: #FFF566 url(../img/promo/vegetables.png) no-repeat top 0 right 0 / 825px;
+    height: 300px;
 }
 
 .sushi {
-    background: #FFF1F0 url(../img/promo/sushi.png) no-repeat top 10px right 15px / 500px
+    background: #FFF1F0 url(../img/promo/sushi.png) no-repeat top 10px right 15px / 500px;
+    height: 300px;
 }
 
 .promo-title {
@@ -566,6 +570,17 @@ button {
     padding: 15px 20px;
     font-size: 20px;
     line-height: 23px;
+}
+
+.swiper {
+    width: 100%;
+    height: 350px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #000;
+    padding-bottom: 35px;
 }
 
 @media (max-width: 1366px) {
