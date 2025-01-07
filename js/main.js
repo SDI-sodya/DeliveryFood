@@ -10,7 +10,10 @@ const loginInput = document.querySelector('#login');
 const passwordInput = document.querySelector('#password');
 const cardsRestaurants = document.querySelector('.cards-restaurants');
 const cardsMenu = document.querySelector('.cards-menu');
-
+const searchInput = document.querySelector('.input-search');
+const searchResultsSection = document.querySelector(".search-results");
+const containerPromo = document.querySelector(".promo-slider");
+const restaurantsSection = document.querySelector(".restaurants");
 
 const getData = async function (url) {
   const response = await fetch(url);
@@ -119,6 +122,44 @@ const handleCardClick = (event) => {
   }
 }
 
+function handleSearch(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const query = event.target.value.trim().toLowerCase();
+    
+    if(!query) {
+      searchInput.style.backgroundColor = '#ffcccc';
+      setTimeout(() => (searchInput.style.backgroundColor = '', 1500));
+      return;
+    }
+    
+    cardsMenu.textContent = '';
+    containerPromo.classList.add('hide');
+    restaurantsSection.classList.add('hide');
+    searchResultsSection.classList.remove('hide');
+    
+    searchResultsSection.querySelector('.section-title').textContent = `Результати пошуку: "${query}"`;
+    
+    getData('./db/partners.json')
+    .then((partners) => {
+      const menuPromises = partners.map((partner) => getData(`./db/${partner.products}`));
+      return Promise.all(menuPromises);
+    })
+    .then((menuArrays) => {
+      const allProducts = menuArrays.flat();
+      const result = allProducts.filter((product) => product.name.toLowerCase().includes(query));
+      
+      if (result.length === 0)
+      cardsMenu.innerHTML = '<p>Нічого не має за даним запитом.</p>';
+      else 
+      result.forEach(createMenuItemCard)
+    })
+    .catch((error) => {
+      console.error('Помилка пошуку:', error);
+    });
+  }
+}
+
 function createCardRestaurant(restaurantData) {
   const {image, kitchen, name, price, products, stars, time_of_delivery:timeOfDelivery} = restaurantData;
   const card = `<a href="restaurant.html" class="card card-restaurant" data-products="${products}">
@@ -161,7 +202,6 @@ function createMenuItemCard(product) {
         </div>
       </div>
     </div>`;
-  const cardsMenu = document.querySelector(".cards-menu");
   cardsMenu.insertAdjacentHTML("beforeend", card);
 }
 
@@ -177,14 +217,6 @@ if (cardsRestaurants) {
   });
   cardsRestaurants.addEventListener('click', handleCardClick);
 }
-
-// var swiper = new Swiper(".swiper", {
-//   navigation: {
-//       nextEl: ".swiper-button-next",
-//       prevEl: ".swiper-button-prev",
-//   },
-//   loop: true,
-// });
 
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -242,29 +274,13 @@ function loadMenuForRestaurant() {
 }
 
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
-  // if (cardsRestaurants) {
-  //   renderCard(cardRestInfo, cardsRestaurants); // Для index.html
-  //   cardsRestaurants.addEventListener('click', handleCardClick);
-  // }
+  if(window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('')) {
+    if (searchInput) {
+      searchInput.addEventListener('keypress', handleSearch);
+    }
+  }
 
-  // if (cardsMenu) {
-  //   // renderCard(cardPizzaInfo, cardsMenu); // Для restaurant.html
-  //   getData('./db/partners.json').then(function(data) {
-  //     data.forEach(renderCard())
-  //   })
-  //   cardsMenu.addEventListener('click', handleCardClick);
-  // }
-
-  // var swiper = new Swiper(".swiper", {
-  //   navigation: {
-  //       nextEl: ".swiper-button-next",
-  //       prevEl: ".swiper-button-prev",
-  //   },
-  //   loop: true,
-  // });
   if (window.location.pathname.endsWith("restaurant.html")) {
     initRestaurantPage();
     loadMenuForRestaurant();
