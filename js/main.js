@@ -1,3 +1,6 @@
+import { db } from './fb.js';
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
 const modalAuth = document.querySelector('.modal-auth');
 const closeAuth = document.querySelector('.close-auth');
 const userName = document.querySelector('.user-name');
@@ -392,6 +395,36 @@ function toggleModalCart() {
   document.body.style.overflow = modalCart.classList.contains('show') ? "hidden" : "";
 }
 
+async function submitOrder() {
+  const phoneNumber = document.getElementById('phone-number').value.trim();
+  if (!phoneNumber) {
+    alert('Будь ласка, введіть номер телефону!');
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert('Кошик порожній. Додайте товари перед оформленням замовлення.');
+    return;
+  }
+
+  try {
+    const order = {
+      phone: phoneNumber,
+      items: cart,
+      totalPrice: cart.reduce((sum, item) => sum + item.cost * item.count, 0),
+      createdAt: new Date().toISOString(),
+    };
+
+    const docRef = await addDoc(collection(db, 'orders'), order);
+    alert(`Замовлення успішно створено! Номер замовлення: ${docRef.id}`);
+    clearCart();
+    toggleModalCart();
+  } catch (error) {
+    console.error('Помилка відправки замовлення:', error);
+    alert('Сталася помилка. Спробуйте знову.');
+  }
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector('.cards-menu').addEventListener('click', addToCard);
@@ -400,6 +433,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector('.modal-cart .close').addEventListener('click', toggleModalCart);
   document.querySelector('.modal-body').addEventListener('click', changeCount);
   document.querySelector('.clear-cart').addEventListener('click', clearCart);
+  document.getElementById('submit-order').addEventListener('click', submitOrder);
+
 
   loadCart();
 
